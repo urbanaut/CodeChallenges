@@ -14,8 +14,11 @@ public class VerifyCorrectWebsite extends TestBase {
         // Navigate to page
         TargetPage.navigateToPage();
 
-        // Get page title
+        // Get page title and verify
         TargetPage.getPageTitle();
-        // Verify website title
+
+        // Select navigation tab
+        TargetPage.clickTab(TargetPage.Tabs.DEALS);
+
     }
 }
