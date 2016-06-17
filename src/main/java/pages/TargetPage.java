@@ -40,62 +40,67 @@ public class TargetPage extends TestBase {
         String pageTitle = driver.getTitle();
         WebElement titleVerificationElem = driver.findElement(titleVerification);
         if (titleVerificationElem.isEnabled())
-            System.out.println("Landing page validation text found.");
+            System.out.println("Landing page validation text '" + validationText + "' found.");
         Assert.assertTrue(pageTitle.contains(validationText), "Verification text did not match page title.");
     }
 
-    public static void selectTabbedSection(Tabs tab) {
-        String assertionText = clickTab(tab);
-        System.out.println("assertionText: " + assertionText);
-        WebElement assertionTextElem = driver.findElement(By.xpath("//title[contains(text(),'" + assertionText + "')]"));
+    private static WebElement selectTab(Tabs tab) {
+        try {
+            switch (tab) {
+                case PLAN_YOUR_TRIP:
+                    WebElement planTabElem = driver.findElement(planTab);
+                    tabValidationText = "All Services";
+                    return planTabElem;
+                case RESORTS_AND_SNOW:
+                    WebElement resortsTabElem = driver.findElement(resortsTab);
+                    tabValidationText = "Get the Official Utah Snow Report";
+                    return resortsTabElem;
+                case STORIES:
+                    WebElement storiesTabElem = driver.findElement(storiesTab);
+                    tabValidationText = "Read About the Latest Happenings on the Slopes";
+                    return storiesTabElem;
+                case DEALS:
+                    WebElement dealsTabElem = driver.findElement(dealsTab);
+                    tabValidationText = "Ski and Snowboard The Greatest Snow on Earth";
+                    return dealsTabElem;
+                case PASSES:
+                    WebElement passesTabElem = driver.findElement(passesTab);
+                    tabValidationText = "Season Passes";
+                    return passesTabElem;
+                case EXPLORE:
+                    WebElement exploreTabElem = driver.findElement(exploreTab);
+                    tabValidationText = "Utah Areas 101";
+                    return exploreTabElem;
+                default:
+                    System.out.println("Invalid tab selected.");
+                    return null;
+            }
+        } catch (Exception e) {
+            System.out.println("Error: Tab selection failed.");
+        }
+        return null;
+    }
+
+    public static void openTabbedSection(Tabs tab) {
+        WebElement activeTab = selectTab(tab);
+        if (activeTab != null && activeTab.isDisplayed())
+            activeTab.click();
+        WebElement assertionTextElem = driver.findElement(By.xpath("//title[contains(text(),'" + tabValidationText + "')]"));
         if (assertionTextElem.isEnabled())
-            System.out.println("New tab validation text found.");
+            System.out.println("New tab validation text '" + tabValidationText + "' found.");
         Assert.assertTrue(assertionTextElem.isEnabled(), "Assertion Failed: Tab title text not found.");
     }
 
-    private static String clickTab(Tabs tab) {
-        switch (tab) {
-            case PLAN_YOUR_TRIP:
-                WebElement planTabElem = driver.findElement(planTab);
-                if (planTabElem.isDisplayed())
-                    planTabElem.click();
-                tabValidationText = "All Services";
-                return tabValidationText;
-            case RESORTS_AND_SNOW:
-                WebElement resortsTabElem = driver.findElement(resortsTab);
-                if (resortsTabElem.isDisplayed())
-                    resortsTabElem.click();
-                tabValidationText = "Get the Official Utah Snow Report";
-                return tabValidationText;
-            case STORIES:
-                WebElement storiesTabElem = driver.findElement(storiesTab);
-                if (storiesTabElem.isDisplayed())
-                    storiesTabElem.click();
-                tabValidationText = "Read About the Latest Happenings on the Slopes";
-                return tabValidationText;
-            case DEALS:
-                WebElement dealsTabElem = driver.findElement(dealsTab);
-                if (dealsTabElem.isDisplayed())
-                    dealsTabElem.click();
-                tabValidationText = "Ski and Snowboard The Greatest Snow on Earth";
-                return tabValidationText;
-            case PASSES:
-                WebElement passesTabElem = driver.findElement(passesTab);
-                if (passesTabElem.isDisplayed())
-                    passesTabElem.click();
-                tabValidationText = "Season Passes";
-                return tabValidationText;
-            case EXPLORE:
-                WebElement exploreTabElem = driver.findElement(exploreTab);
-                if (exploreTabElem.isDisplayed())
-                    exploreTabElem.click();
-                tabValidationText = "Utah Areas 101";
-                return tabValidationText;
-            default:
-                System.out.println("Invalid tab selected.");
-                return null;
+    public static void selectSubMenuItem(Tabs tab, String item) {
+        WebElement activeTab = selectTab(tab);
+        try {
+            if (activeTab != null && activeTab.isDisplayed())
+                action.moveToElement(activeTab).perform();
+            WebElement menuItem = driver.findElement(By.linkText(item));
+            action.moveToElement(menuItem).click(menuItem).perform();
+        } catch (Exception e) {
+            System.out.println("Error: Unable to select sub-menu item.");
         }
     }
-
 
 }

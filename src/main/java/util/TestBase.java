@@ -1,7 +1,9 @@
 package util;
 
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.BeforeClass;
 
@@ -13,6 +15,8 @@ import java.util.concurrent.TimeUnit;
 public class TestBase {
 
     protected static WebDriver driver;
+    protected static Actions action;
+    protected static JavascriptExecutor jsEx;
     protected static WebDriverWait wait;
     private static String driverPath = "src\\main\\resources\\drivers\\chromedriver.exe";
 
@@ -21,6 +25,8 @@ public class TestBase {
     public static void initialize() {
         System.setProperty("webdriver.chrome.driver",driverPath);
         driver = new ChromeDriver();
+        action = new Actions(driver);
+        jsEx = (JavascriptExecutor) driver;
         wait = new WebDriverWait(driver, 20);
 
         driver.manage().window().maximize();
