@@ -1,6 +1,8 @@
 package tests;
 
 import org.testng.annotations.Test;
+import pages.AllServicesPage;
+import pages.ExploreUtahPage;
 import pages.LandingPage;
 import util.TestBase;
 
@@ -12,6 +14,9 @@ public class VerifyCorrectWebsite extends TestBase {
     private static LandingPage.Tabs tab = LandingPage.Tabs.DEALS;
     private static String subMenuItem = "Beginner";
     private static String resortName = "Park City";
+    private static String searchWhat = "Ski School";
+    private static String searchByResort = "Brighton";
+    private static String searchSubCategory = "Family and Kids";
 
     @Test
     public static void verifySiteTitle() throws InterruptedException {
@@ -28,6 +33,9 @@ public class VerifyCorrectWebsite extends TestBase {
         LandingPage.selectSubMenuItem(tab,subMenuItem);
 
         // Challenge #4: Return resort travel times from airport
-        LandingPage.compareResortAirportTimes(resortName);
+        ExploreUtahPage.compareResortAirportTimes(resortName);
+
+        // Challenge #5: Pass in search parameters
+        AllServicesPage.searchForService(searchWhat,searchByResort,searchSubCategory);
     }
 }
