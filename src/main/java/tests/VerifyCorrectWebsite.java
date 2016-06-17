@@ -1,7 +1,7 @@
-package challenge01.tests;
+package tests;
 
 import org.testng.annotations.Test;
-import challenge01.pages.TargetPage;
+import pages.TargetPage;
 import util.TestBase;
 
 /**
