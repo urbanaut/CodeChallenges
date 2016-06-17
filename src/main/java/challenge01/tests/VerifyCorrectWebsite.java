@@ -18,7 +18,7 @@ public class VerifyCorrectWebsite extends TestBase {
         TargetPage.getPageTitle();
 
         // Select navigation tab
-        TargetPage.clickTab(TargetPage.Tabs.DEALS);
+        TargetPage.selectTabbedSection(TargetPage.Tabs.DEALS);
 
     }
 }
