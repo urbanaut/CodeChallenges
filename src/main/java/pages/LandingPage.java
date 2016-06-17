@@ -8,12 +8,14 @@ import util.TestBase;
 /**
  * Created by bill.witt on 6/14/2016.
  */
-public class TargetPage extends TestBase {
+public class LandingPage extends TestBase {
 
+    private static String pageUrl = "https://www.skiutah.com";
     private static String validationText = "Ski Utah";
     private static By titleVerification = By.xpath("//title[contains(text(),'" + validationText + "')]");
-    private static String pageUrl = "https://www.skiutah.com";
     private static String tabValidationText;
+    private static By skiUtahBtn = By.className("HeaderMain-logoImg");
+    private static By exploreUtahBtn = By.xpath("//div/h1/span[contains(text(),'Explore Utah')]");
 
     // Tabs
     private static By planTab = By.xpath("//a[@title='Plan Your Trip']");
@@ -92,8 +94,8 @@ public class TargetPage extends TestBase {
     }
 
     public static void selectSubMenuItem(Tabs tab, String item) {
-        WebElement activeTab = selectTab(tab);
         try {
+            WebElement activeTab = selectTab(tab);
             if (activeTab != null && activeTab.isDisplayed())
                 action.moveToElement(activeTab).perform();
             WebElement menuItem = driver.findElement(By.linkText(item));
@@ -103,4 +105,26 @@ public class TargetPage extends TestBase {
         }
     }
 
+    private static void returnToLandingPage() {
+        WebElement skiUtahBtnElem = driver.findElement(skiUtahBtn);
+        skiUtahBtnElem.click();
+    }
+
+    public static void compareResortAirportTimes(String resort) throws InterruptedException {
+        try {
+            returnToLandingPage();
+            WebElement exploreUtahBtnElem = driver.findElement(exploreUtahBtn);
+            waitForElement(exploreUtahBtnElem);
+            action.moveToElement(exploreUtahBtnElem).click(exploreUtahBtnElem).perform();
+            String distance = getResortDistance(resort);
+            System.out.println("The distance from the closest airport to " + resort + " resort is " + distance + " miles.");
+        } catch (Exception e) {
+            System.out.println("Error: unable to find distance from submitted resort.  Check resort name spelling.");
+        }
+    }
+
+    private static String getResortDistance(String resort) {
+        WebElement resortDistanceElem = driver.findElement(By.xpath("//div//label/span[@class='map-Area-shortName' and text()='" + resort + "']/following-sibling::span[@class='map-Area-shortValue map-Area-shortValue--distance']"));
+        return resortDistanceElem.getAttribute("innerHTML");
+    }
 }

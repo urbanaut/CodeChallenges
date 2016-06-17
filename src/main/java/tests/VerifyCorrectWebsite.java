@@ -1,7 +1,7 @@
 package tests;
 
 import org.testng.annotations.Test;
-import pages.TargetPage;
+import pages.LandingPage;
 import util.TestBase;
 
 /**
@@ -9,21 +9,25 @@ import util.TestBase;
  */
 public class VerifyCorrectWebsite extends TestBase {
 
-    private static TargetPage.Tabs tab = TargetPage.Tabs.DEALS;
+    private static LandingPage.Tabs tab = LandingPage.Tabs.DEALS;
     private static String subMenuItem = "Beginner";
+    private static String resortName = "Park City";
 
     @Test
     public static void verifySiteTitle() throws InterruptedException {
         // Navigate to page
-        TargetPage.navigateToPage();
+        LandingPage.navigateToPage();
 
         // Challenge #1: Get page title and verify
-        TargetPage.getPageTitle();
+        LandingPage.getPageTitle();
 
         // Challenge #2: Select navigation tab
-        TargetPage.openTabbedSection(tab);
+        LandingPage.openTabbedSection(tab);
 
         // Challenge #3: Navigate through sub-pages and menus
-        TargetPage.selectSubMenuItem(tab,subMenuItem);
+        LandingPage.selectSubMenuItem(tab,subMenuItem);
+
+        // Challenge #4: Return resort travel times from airport
+        LandingPage.compareResortAirportTimes(resortName);
     }
 }
