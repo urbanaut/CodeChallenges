@@ -10,7 +10,7 @@ import util.TestBase;
  */
 public class LandingPage extends TestBase {
 
-    private static String pageUrl = "https://www.skiutah.com";
+    public static String pageUrl = "https://www.skiutah.com";
     private static String validationText = "Ski Utah";
     private static By titleVerification = By.xpath("//title[contains(text(),'" + validationText + "')]");
     private static String tabValidationText;

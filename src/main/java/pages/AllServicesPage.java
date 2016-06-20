@@ -13,12 +13,15 @@ public class AllServicesPage extends TestBase {
     private static By searchWhatSelector = By.name("filter-category-select");
     private static By searchByResortSelector = By.name("filter-resort-select");
     private static By searchSubCategorySelector = By.name("filter-sub-category-select");
+    private static By okBtn = By.name("filter-form-submit");
 
     public static void searchForService(String what, String resort, String sub) {
         LandingPage.openTabbedSection(LandingPage.Tabs.PLAN_YOUR_TRIP);
+        WebElement okBtnElem = driver.findElement(okBtn);
         selectWhat(what);
         selectResort(resort);
         selectSubCategory(sub);
+        okBtnElem.click();
     }
 
     private static void selectWhat(String what) {

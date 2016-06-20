@@ -4,12 +4,13 @@ import org.testng.annotations.Test;
 import pages.AllServicesPage;
 import pages.ExploreUtahPage;
 import pages.LandingPage;
+import pages.SearchResultsPage;
 import util.TestBase;
 
 /**
  * Created by bill.witt on 6/15/2016.
  */
-public class VerifyCorrectWebsite extends TestBase {
+public class RunCodeChallengeAutomation extends TestBase {
 
     private static LandingPage.Tabs tab = LandingPage.Tabs.DEALS;
     private static String subMenuItem = "Beginner";
@@ -37,5 +38,9 @@ public class VerifyCorrectWebsite extends TestBase {
 
         // Challenge #5: Pass in search parameters
         AllServicesPage.searchForService(searchWhat,searchByResort,searchSubCategory);
+        SearchResultsPage.readAndPostResults();
+
+        //Challenge #6: Crawl every page on the site
+
     }
 }
