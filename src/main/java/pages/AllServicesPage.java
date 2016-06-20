@@ -21,10 +21,10 @@ public class AllServicesPage extends TestBase {
         selectSubCategory(sub);
     }
 
-    private static void selectWhat(String searchWhat) {
+    private static void selectWhat(String what) {
         WebElement searchWhatSelectorElem = driver.findElement(searchWhatSelector);
         searchWhatSelectorElem.click();
-        WebElement whatElem = driver.findElement(By.xpath("//option[@data-select-chain='" + searchWhat + "']"));
+        WebElement whatElem = driver.findElement(By.xpath("//option[@data-select-chain='" + what + "']"));
         whatElem.click();
         action.sendKeys(Keys.ESCAPE).perform();
     }
