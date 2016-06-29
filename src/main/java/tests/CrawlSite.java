@@ -23,12 +23,11 @@ public class CrawlSite extends TestBase {
 
     private static boolean showInBrowser = false;
     private static String startingUrl = LandingPage.pageUrl;
-    private static String date = getDateTime();
-    private static String filePathAndName = "src\\main\\java\\output\\validUrls_" + date + ".txt";
+    private static String dateTime = getDateTime();
+    private static String filePathAndName = "validUrls_" + dateTime + ".txt";
 
     private static HashSet<String> crawledList = new HashSet<String>();
     private static Queue<String> toCrawlList = new LinkedBlockingQueue<>(1024);
-    private static FileWriter fileWriter;
     private static BufferedWriter bufferedWriter;
 
 
@@ -39,7 +38,7 @@ public class CrawlSite extends TestBase {
             if (!outputFile.exists()) {
                 outputFile.createNewFile();
             }
-            fileWriter = new FileWriter(outputFile.getName(),true);
+            FileWriter fileWriter = new FileWriter(outputFile.getName(),true);
             bufferedWriter = new BufferedWriter(fileWriter);
             crawlSite(startingUrl);
         } catch (Exception e) {
@@ -51,6 +50,7 @@ public class CrawlSite extends TestBase {
         try {
             if (showInBrowser)
                 driver.navigate().to(url);
+
             Document doc = Jsoup.connect(url).userAgent("Chrome").get();
             Elements anchors = doc.select("a");
 
@@ -83,8 +83,6 @@ public class CrawlSite extends TestBase {
 
         System.out.println("URLs to visit: " + queueCount);
         System.out.println("Visited URLs: " + crawledList.size());
-//        if (crawledList.size() > 200)
-//            System.exit(0);
         for (int i = 0; i < queueCount; i++) {
             url = queue.poll();
             crawledList.add(url);
@@ -98,7 +96,6 @@ public class CrawlSite extends TestBase {
     protected void finalize() throws Throwable {
         try {
             bufferedWriter.close();
-            fileWriter.close();
             driver.close();
             driver.quit();
             super.finalize();

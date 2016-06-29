@@ -41,6 +41,6 @@ public class RunCodeChallengeAutomation extends TestBase {
         SearchResultsPage.readAndPostResults();
 
         //Challenge #6: Crawl every page on the site
-
+        CrawlSite.startCrawl();
     }
 }

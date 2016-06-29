@@ -49,7 +49,7 @@ public class TestBase {
 
     protected static String getDateTime() {
         Date date = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
         return dateFormat.format(date);
     }
 
