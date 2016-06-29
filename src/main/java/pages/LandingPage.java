@@ -15,7 +15,6 @@ public class LandingPage extends TestBase {
     private static By titleVerification = By.xpath("//title[contains(text(),'" + validationText + "')]");
     private static String tabValidationText;
     private static By skiUtahBtn = By.className("HeaderMain-logoImg");
-    private static By exploreUtahBtn = By.xpath("//div/h1/span[contains(text(),'Explore Utah')]");
 
     // Tabs
     private static By planTab = By.xpath("//a[@title='Plan Your Trip']");
@@ -84,13 +83,17 @@ public class LandingPage extends TestBase {
     }
 
     public static void openTabbedSection(Tabs tab) {
-        WebElement activeTab = selectTab(tab);
-        if (activeTab != null && activeTab.isDisplayed())
-            activeTab.click();
-        WebElement assertionTextElem = driver.findElement(By.xpath("//title[contains(text(),'" + tabValidationText + "')]"));
-        if (assertionTextElem.isEnabled())
-            System.out.println("New tab validation text '" + tabValidationText + "' found.");
-        Assert.assertTrue(assertionTextElem.isEnabled(), "Assertion Failed: Tab title text not found.");
+        try {
+            WebElement activeTab = selectTab(tab);
+            if (activeTab != null && activeTab.isDisplayed())
+                activeTab.click();
+            WebElement assertionTextElem = driver.findElement(By.xpath("//title[contains(text(),'" + tabValidationText + "')]"));
+            if (assertionTextElem.isEnabled())
+                System.out.println("New tab validation text '" + tabValidationText + "' found.");
+            Assert.assertTrue(assertionTextElem.isEnabled(), "Assertion Failed: Tab title text not found.");
+        } catch (Exception e) {
+            System.out.println("Error: Failed to open specified tab.");
+        }
     }
 
     public static void selectSubMenuItem(Tabs tab, String item) {

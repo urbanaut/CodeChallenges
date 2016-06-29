@@ -13,25 +13,34 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Created by bill.witt on 6/20/2016.
  */
 public class CrawlSite extends TestBase {
 
+    private static boolean showInBrowser = false;
     private static String startingUrl = LandingPage.pageUrl;
-    private static String discoveredUrl;
-    private static String filePathAndName = "src\\main\\java\\output\\validUrls.txt";
+    private static String date = getDateTime();
+    private static String filePathAndName = "src\\main\\java\\output\\validUrls_" + date + ".txt";
+
     private static HashSet<String> crawledList = new HashSet<String>();
-    private static Queue<String> toCrawlList = new LinkedList<String>();
-    private static int countdown = 0;
+    private static Queue<String> toCrawlList = new LinkedBlockingQueue<>(1024);
+    private static FileWriter fileWriter;
+    private static BufferedWriter bufferedWriter;
 
 
     @Test
     public static void startCrawl() {
         try {
+            File outputFile = new File(filePathAndName);
+            if (!outputFile.exists()) {
+                outputFile.createNewFile();
+            }
+            fileWriter = new FileWriter(outputFile.getName(),true);
+            bufferedWriter = new BufferedWriter(fileWriter);
             crawlSite(startingUrl);
         } catch (Exception e) {
             System.out.println("Failed to initiate Web crawl.");
@@ -40,33 +49,31 @@ public class CrawlSite extends TestBase {
 
     private static void crawlSite(String url) throws IOException {
         try {
-            File outputFile = new File(filePathAndName);
-            FileWriter fileWriter = new FileWriter(outputFile.getAbsoluteFile());
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-            Document doc = Jsoup.connect(url).get();
+            if (showInBrowser)
+                driver.navigate().to(url);
+            Document doc = Jsoup.connect(url).userAgent("Chrome").get();
             Elements anchors = doc.select("a");
 
-            if (!outputFile.exists()) {
-                outputFile.createNewFile();
-            }
-
             for (Element anchor : anchors) {
-                discoveredUrl = anchor.attr("abs:href").toLowerCase();
+                String discoveredUrl = anchor.attr("abs:href").toLowerCase();
                 if (!toCrawlList.contains(discoveredUrl)
+                        && !crawledList.contains(discoveredUrl)
                         && discoveredUrl.contains(startingUrl)
                         && discoveredUrl.length() > 1
                         && !discoveredUrl.contains("@@")
-                        && !discoveredUrl.contains("&")) {
-                        System.out.println("New URL found: " + discoveredUrl);
+                        && !discoveredUrl.contains("&")
+                        && !discoveredUrl.contains("?")
+                        && !discoveredUrl.contains("mobile")) {
+                    System.out.println("New URL found: " + discoveredUrl);
                     toCrawlList.add(discoveredUrl);
-                    bufferedWriter.write(url);
-                } else {
-                    continue;
+                    bufferedWriter.write("\n[" + toCrawlList.size() + "] " + discoveredUrl);
                 }
             }
+            System.gc();
+            toCrawlList.remove(url);
             crawlUrlList(toCrawlList);
         } catch (Exception e) {
-            System.out.println("No new links found on page.");
+            System.out.println("No new links found, skipping page.");
         }
     }
 
@@ -75,16 +82,29 @@ public class CrawlSite extends TestBase {
         String url;
 
         System.out.println("URLs to visit: " + queueCount);
+        System.out.println("Visited URLs: " + crawledList.size());
+//        if (crawledList.size() > 200)
+//            System.exit(0);
         for (int i = 0; i < queueCount; i++) {
-            url = queue.remove();
-            System.out.println("Visiting link: " + url);
-            queue.remove(i);
+            url = queue.poll();
             crawledList.add(url);
+            System.out.println("Visiting link: " + url);
             crawlSite(url);
-            System.out.println("Visited URLs: " + crawledList.size());
-
         }
         System.out.println("Final queue count: " + queue.size());
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        try {
+            bufferedWriter.close();
+            fileWriter.close();
+            driver.close();
+            driver.quit();
+            super.finalize();
+        } catch (Throwable t) {
+            throw t;
+        }
     }
 }
 

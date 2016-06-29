@@ -4,15 +4,14 @@ import org.testng.annotations.Test;
 import pages.LandingPage;
 
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.Stack;
 
 public class CodeTester {
     private static String startingUrl = LandingPage.pageUrl;
     private static String discoveredUrl;
     private static String filePathAndName = "src\\main\\java\\output\\validUrls.txt";
     private static HashSet<String> crawledList = new HashSet<String>();
-    private static Queue<Integer> toCrawlList = new LinkedList<Integer>();
+    private static Stack<Integer> toCrawlList = new Stack<Integer>();
 
 
 //    @Test
@@ -74,7 +73,7 @@ public class CodeTester {
     public static void queueTest() {
         System.out.println("Initial Queue size: " + toCrawlList.size());
         for (int i = 0; i < 10; i++) {
-            toCrawlList.add(i);
+            toCrawlList.push(i);
         }
         for (int number : toCrawlList) {
             System.out.println("Queue index: " + number);
@@ -84,7 +83,7 @@ public class CodeTester {
         for (int y = 0; y < queueSize; y++) {
             System.out.println("y: " + y);
             System.out.println("List size:" + toCrawlList.size());
-            toCrawlList.remove(y);
+            toCrawlList.pop();
         }
         System.out.println("Queue size after: " + toCrawlList.size());
     }
