@@ -53,4 +53,10 @@ public class TestBase {
         return dateFormat.format(date);
     }
 
+//    @AfterClass
+//    public void tearDown() {
+//        if (driver != null)
+//            driver.quit();
+//    }
+
 }

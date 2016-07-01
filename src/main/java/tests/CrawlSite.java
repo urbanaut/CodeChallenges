@@ -4,15 +4,17 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.openqa.selenium.WebElement;
 import org.testng.annotations.Test;
 import pages.LandingPage;
+import util.FindBrokenImages;
 import util.TestBase;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -22,34 +24,37 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class CrawlSite extends TestBase {
 
     private static boolean showInBrowser = false;
+    private static boolean getPageText;
+    private static boolean checkImages;
     private static String startingUrl = LandingPage.pageUrl;
     private static String dateTime = getDateTime();
-    private static String filePathAndName = "validUrls_" + dateTime + ".txt";
+    private static String validUrls = "validUrls_" + dateTime + ".txt";
+    private static String extractedText = "dictionary_" + dateTime + ".txt";
+    private static String brokenImages = "brokenImages_" + dateTime + ".txt";
+    private static int brokenImgCount;
 
+    private static List<WebElement> imageList;
     private static HashSet<String> crawledList = new HashSet<String>();
     private static Queue<String> toCrawlList = new LinkedBlockingQueue<>(1024);
     private static BufferedWriter bufferedWriter;
 
 
     @Test
-    public static void startCrawl() {
+    public static void startCrawl(boolean extractText, boolean checkBrokenImgs) {
         try {
-            File outputFile = new File(filePathAndName);
-            if (!outputFile.exists()) {
-                outputFile.createNewFile();
-            }
-            FileWriter fileWriter = new FileWriter(outputFile.getName(),true);
-            bufferedWriter = new BufferedWriter(fileWriter);
+            getPageText = extractText;
+            checkImages = checkBrokenImgs;
             crawlSite(startingUrl);
         } catch (Exception e) {
             System.out.println("Failed to initiate Web crawl.");
         }
     }
 
-    private static void crawlSite(String url) throws IOException {
+    private static void crawlSite(String url) throws Exception {
         try {
-            if (showInBrowser)
+            if (showInBrowser) {
                 driver.navigate().to(url);
+            }
 
             Document doc = Jsoup.connect(url).userAgent("Chrome").get();
             Elements anchors = doc.select("a");
@@ -66,18 +71,35 @@ public class CrawlSite extends TestBase {
                         && !discoveredUrl.contains("mobile")) {
                     System.out.println("New URL found: " + discoveredUrl);
                     toCrawlList.add(discoveredUrl);
-                    bufferedWriter.write("\n[" + toCrawlList.size() + "] " + discoveredUrl);
+                    writeToFile(validUrls, "\n[" + toCrawlList.size() + "] " + discoveredUrl);
                 }
             }
-            System.gc();
+
+            if (getPageText) {
+                String pageText = doc.body().text();
+                writeToFile(extractedText, "\n" + pageText + "\n");
+            }
+
+            if (checkImages) {
+                FindBrokenImages.checkImageLinks();
+            }
+
             toCrawlList.remove(url);
-            crawlUrlList(toCrawlList);
+            System.gc();
         } catch (Exception e) {
             System.out.println("No new links found, skipping page.");
+        } finally {
+            if (toCrawlList.size() > 1) {
+                try {
+                    crawlUrlList(toCrawlList);
+                } catch (Exception e) {
+                    System.out.println("Error: Unable to crawl URL list.");
+                }
+            }
         }
     }
 
-    private static void crawlUrlList(Queue<String> queue) throws IOException {
+    private static void crawlUrlList(Queue<String> queue) throws Exception {
         int queueCount = queue.size();
         String url;
 
@@ -89,19 +111,28 @@ public class CrawlSite extends TestBase {
             System.out.println("Visiting link: " + url);
             crawlSite(url);
         }
-        System.out.println("Final queue count: " + queue.size());
     }
+
+    private static void writeToFile(String fileName, String output) throws Exception {
+        File outputFile = new File(fileName);
+        if (!outputFile.exists()) {
+            outputFile.createNewFile();
+        }
+        FileWriter fileWriter = new FileWriter(outputFile.getName(),true);
+        bufferedWriter = new BufferedWriter(fileWriter);
+        bufferedWriter.write(output);
+        bufferedWriter.flush();
+        bufferedWriter.close();
+    }
+
 
     @Override
     protected void finalize() throws Throwable {
         try {
             bufferedWriter.close();
-            driver.close();
-            driver.quit();
             super.finalize();
         } catch (Throwable t) {
             throw t;
         }
     }
 }
-
