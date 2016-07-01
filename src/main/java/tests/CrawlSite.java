@@ -4,7 +4,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.openqa.selenium.WebElement;
 import org.testng.annotations.Test;
 import pages.LandingPage;
 import util.FindBrokenImages;
@@ -14,7 +13,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -31,9 +29,7 @@ public class CrawlSite extends TestBase {
     private static String validUrls = "validUrls_" + dateTime + ".txt";
     private static String extractedText = "dictionary_" + dateTime + ".txt";
     private static String brokenImages = "brokenImages_" + dateTime + ".txt";
-    private static int brokenImgCount;
 
-    private static List<WebElement> imageList;
     private static HashSet<String> crawledList = new HashSet<String>();
     private static Queue<String> toCrawlList = new LinkedBlockingQueue<>(1024);
     private static BufferedWriter bufferedWriter;
@@ -81,7 +77,7 @@ public class CrawlSite extends TestBase {
             }
 
             if (checkImages) {
-                FindBrokenImages.checkImageLinks();
+                FindBrokenImages.checkImageLinks(url);
             }
 
             toCrawlList.remove(url);

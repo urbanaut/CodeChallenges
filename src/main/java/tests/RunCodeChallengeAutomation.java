@@ -15,7 +15,7 @@ public class RunCodeChallengeAutomation extends TestBase {
     private static LandingPage.Tabs tab = LandingPage.Tabs.DEALS;
     private static String subMenuItem = "Beginner";
     private static String resortName = "Park City";
-    private static String searchTopic = "Ski School";
+    private static String searchWhat = "Ski School";
     private static String searchByResort = "Brighton";
     private static String searchSubCategory = "Family and Kids";
     private static boolean text;
@@ -39,7 +39,7 @@ public class RunCodeChallengeAutomation extends TestBase {
         ExploreUtahPage.compareResortAirportTimes(resortName);
 
         // Challenge #5: Pass in search parameters
-        AllServicesPage.searchForService(searchTopic,searchByResort,searchSubCategory);
+        AllServicesPage.searchForService(searchWhat,searchByResort,searchSubCategory);
         SearchResultsPage.readAndPostResults();
 
         // Challenge #6: Crawl every page on the site

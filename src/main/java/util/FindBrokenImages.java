@@ -1,5 +1,6 @@
 package util;
 
+import org.jsoup.Jsoup;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
@@ -15,18 +16,23 @@ public class FindBrokenImages extends TestBase {
     private static int responseCode;
     private static List<WebElement> imageList;
 
-    public static void checkImageLinks() throws Exception {
-//        HttpClient client = HttpClientBuilder.create().build();
-//        HttpGet request = new HttpGet(url);
-//        HttpResponse response = (HttpResponse) client.execute(request);
-        System.out.println("Searching for broken images...");
-        imageList = driver.findElements(By.tagName("img"));
-        for (WebElement image : imageList) {
-            if (!image.getAttribute("src").equals("")) {
-                responseCode = getResponseCode(image.getAttribute("src").trim());
-                if (responseCode != 200) {
-                    System.out.println("Broken image found at URL: " + image.getAttribute("src").trim());
+    public static void checkImageLinks(String url) throws Exception {
+        try {
+            Jsoup.connect(url).userAgent("Chrome").get();
+            System.out.print("Searching for broken images...");
+            imageList = driver.findElements(By.tagName("img"));
+            for (WebElement image : imageList) {
+                if (!image.getAttribute("src").equals("")) {
+                    responseCode = getResponseCode(image.getAttribute("src").trim());
+                    if (responseCode != 200) {
+                        System.out.println("\nResponse Code: " + responseCode);
+                        System.out.println("Broken image found at URL: " + image.getAttribute("src").trim());
+                    }
                 }
+            }
+        } catch (Exception e) {
+            if (responseCode == 200) {
+                System.out.println("no broken images found.");
             }
         }
     }
@@ -38,8 +44,6 @@ public class FindBrokenImages extends TestBase {
         connection.connect();
         return connection.getResponseCode();
     }
-
-
 
 
 
