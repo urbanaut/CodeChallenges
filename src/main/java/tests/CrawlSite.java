@@ -8,10 +8,8 @@ import org.testng.annotations.Test;
 import pages.LandingPage;
 import util.FindBrokenImages;
 import util.TestBase;
+import util.WriteToFile;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.util.HashSet;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -28,11 +26,9 @@ public class CrawlSite extends TestBase {
     private static String dateTime = getDateTime();
     private static String validUrls = "validUrls_" + dateTime + ".txt";
     private static String extractedText = "dictionary_" + dateTime + ".txt";
-    private static String brokenImages = "brokenImages_" + dateTime + ".txt";
 
     private static HashSet<String> crawledList = new HashSet<String>();
     private static Queue<String> toCrawlList = new LinkedBlockingQueue<>(1024);
-    private static BufferedWriter bufferedWriter;
 
 
     @Test
@@ -67,16 +63,18 @@ public class CrawlSite extends TestBase {
                         && !discoveredUrl.contains("mobile")) {
                     System.out.println("New URL found: " + discoveredUrl);
                     toCrawlList.add(discoveredUrl);
-                    writeToFile(validUrls, "\n[" + toCrawlList.size() + "] " + discoveredUrl);
+                    WriteToFile.writeOutput(validUrls, "\n[" + toCrawlList.size() + "] " + discoveredUrl);
                 }
             }
 
             if (getPageText) {
+                System.out.println("Extracting page text.");
                 String pageText = doc.body().text();
-                writeToFile(extractedText, "\n" + pageText + "\n");
+                WriteToFile.writeOutput(extractedText, "\n" + pageText + "\n");
             }
 
             if (checkImages) {
+                System.out.print("Checking for broken images...");
                 FindBrokenImages.checkImageLinks(url);
             }
 
@@ -109,23 +107,10 @@ public class CrawlSite extends TestBase {
         }
     }
 
-    private static void writeToFile(String fileName, String output) throws Exception {
-        File outputFile = new File(fileName);
-        if (!outputFile.exists()) {
-            outputFile.createNewFile();
-        }
-        FileWriter fileWriter = new FileWriter(outputFile.getName(),true);
-        bufferedWriter = new BufferedWriter(fileWriter);
-        bufferedWriter.write(output);
-        bufferedWriter.flush();
-        bufferedWriter.close();
-    }
-
 
     @Override
     protected void finalize() throws Throwable {
         try {
-            bufferedWriter.close();
             super.finalize();
         } catch (Throwable t) {
             throw t;

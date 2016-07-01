@@ -6,6 +6,7 @@ import org.openqa.selenium.WebElement;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -14,19 +15,27 @@ import java.util.List;
 public class FindBrokenImages extends TestBase {
 
     private static int responseCode;
+    private static String dateTime = getDateTime();
+    private static String brokenImgFile = "brokenImages_" + dateTime + ".txt";
+
+    private static HashSet<String> brokenImgList = new HashSet<String>();
     private static List<WebElement> imageList;
 
     public static void checkImageLinks(String url) throws Exception {
         try {
+            String imgUrl;
             Jsoup.connect(url).userAgent("Chrome").get();
-            System.out.print("Searching for broken images...");
+
             imageList = driver.findElements(By.tagName("img"));
             for (WebElement image : imageList) {
-                if (!image.getAttribute("src").equals("")) {
-                    responseCode = getResponseCode(image.getAttribute("src").trim());
+                 imgUrl = image.getAttribute("src").trim();
+                if (!imgUrl.equals("")) {
+                    responseCode = getResponseCode(imgUrl);
                     if (responseCode != 200) {
                         System.out.println("\nResponse Code: " + responseCode);
-                        System.out.println("Broken image found at URL: " + image.getAttribute("src").trim());
+                        System.out.println("Broken image found at URL: " + imgUrl);
+                        brokenImgList.add(imgUrl);
+                        WriteToFile.writeOutput(brokenImgFile,imgUrl);
                     }
                 }
             }
@@ -44,41 +53,4 @@ public class FindBrokenImages extends TestBase {
         connection.connect();
         return connection.getResponseCode();
     }
-
-
-
-
-
-
-
-//        EventFiringWebDriver eventFiringWebDriver = new EventFiringWebDriver (driver);
-//
-//        // Storing all the image elemt  in the variable allImages
-//        List<WebElement> allImages = eventFiringWebDriver.findElements(By.tagName("img"));
-//        int countBrokenImages = 0;
-//
-//        // Declaring a dynamic  string of array which will store src of all the broken images
-//        List<String> BrokenImageUrl = new ArrayList<String>();
-//
-//        String script = "return (typeof arguments[0].naturalWidth!=\"undefined\" && arguments[0].naturalWidth>0)";
-//
-//        for (WebElement image : allImages)
-//        {
-//            Object imgStatus = eventFiringWebDriver.executeScript(script, image);
-//            if(imgStatus.equals(false))
-//            {
-//                String  currentImageUrl = image.getAttribute("src");
-//                String imageUrl = currentImageUrl ;
-//                BrokenImageUrl.add(imageUrl);
-//                countBrokenImages++;
-//            }
-//        }
-//
-//        // Printing the src of the broken images if any
-//        System.out.println("Number of broken images found in the page : " +countBrokenImages);
-//        for (String z : BrokenImageUrl)
-//        {
-//            System.out.println(z);
-//        }
-//    }
 }

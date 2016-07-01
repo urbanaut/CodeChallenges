@@ -6,6 +6,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 
 import java.text.SimpleDateFormat;
@@ -53,10 +54,10 @@ public class TestBase {
         return dateFormat.format(date);
     }
 
-//    @AfterClass
-//    public void tearDown() {
-//        if (driver != null)
-//            driver.quit();
-//    }
+    @AfterClass
+    public void tearDown() {
+        if (driver != null)
+            driver.quit();
+    }
 
 }

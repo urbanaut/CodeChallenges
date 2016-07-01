@@ -10,8 +10,9 @@ import util.TestBase;
 /**
  * Created by bill.witt on 6/15/2016.
  */
-public class RunCodeChallengeAutomation extends TestBase {
+public class CodeChallenge extends TestBase {
 
+    private static CodeChallenge.CrawlerOptions option = CrawlerOptions.BOTH;
     private static LandingPage.Tabs tab = LandingPage.Tabs.DEALS;
     private static String subMenuItem = "Beginner";
     private static String resortName = "Park City";
@@ -43,18 +44,9 @@ public class RunCodeChallengeAutomation extends TestBase {
         SearchResultsPage.readAndPostResults();
 
         // Challenge #6: Crawl every page on the site
-        selectCrawlerOption(CrawlerOptions.NONE);
-
         // Challenge #7: Get all page's text from Crawler
-//        selectCrawlerOption(CrawlerOptions.TEXT);
-
         // Challenge #8: Find all page's broken images
-        selectCrawlerOption(CrawlerOptions.IMAGES);
-
-        // Crawl for URLs, text, and images
-//        selectCrawlerOption(CrawlerOptions.BOTH);
-
-        // Run Crawler
+        selectCrawlerOption(option);
         CrawlSite.startCrawl(text, images);
 
     }
