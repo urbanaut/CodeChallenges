@@ -5,6 +5,7 @@ import pages.AllServicesPage;
 import pages.ExploreUtahPage;
 import pages.LandingPage;
 import pages.SearchResultsPage;
+import util.CrawlerOptions;
 import util.TestBase;
 
 /**
@@ -12,15 +13,14 @@ import util.TestBase;
  */
 public class CodeChallenge extends TestBase {
 
-    private static CodeChallenge.CrawlerOptions option = CrawlerOptions.BOTH;
+    private static CrawlerOptions option = CrawlerOptions.NONE;
     private static LandingPage.Tabs tab = LandingPage.Tabs.DEALS;
     private static String subMenuItem = "Beginner";
     private static String resortName = "Park City";
     private static String searchWhat = "Ski School";
     private static String searchByResort = "Brighton";
     private static String searchSubCategory = "Family and Kids";
-    private static boolean text;
-    private static boolean images;
+    private static boolean text, images;
 
     @Test
     public static void runAutomation() throws InterruptedException {
@@ -46,42 +46,9 @@ public class CodeChallenge extends TestBase {
         // Challenge #6: Crawl every page on the site
         // Challenge #7: Get all page's text from Crawler
         // Challenge #8: Find all page's broken images
-        selectCrawlerOption(option);
+        text = Boolean.parseBoolean(CrawlerOptions.selectCrawlerOption(option).get(0));
+        images = Boolean.parseBoolean(CrawlerOptions.selectCrawlerOption(option).get(2));
         CrawlSite.startCrawl(text, images);
 
-    }
-
-    private enum CrawlerOptions {
-        NONE,
-        TEXT,
-        IMAGES,
-        BOTH
-    }
-
-    private static void selectCrawlerOption(CrawlerOptions option) {
-        try {
-            switch (option) {
-                case NONE:
-                    text = false;
-                    images = false;
-                    break;
-                case TEXT:
-                    text = true;
-                    images = false;
-                    break;
-                case IMAGES:
-                    text = false;
-                    images = true;
-                    break;
-                case BOTH:
-                    text = true;
-                    images = true;
-                    break;
-                default:
-                    System.out.println("Invalid Crawler option selected.");
-            }
-        } catch (Exception e) {
-            System.out.println("Error: Failed to select a valid crawler option.");
-        }
     }
 }

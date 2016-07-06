@@ -25,7 +25,8 @@ public class ExploreUtahPage extends TestBase {
     }
 
     private static String getResortDistance(String resort) {
-        WebElement resortDistanceElem = driver.findElement(By.xpath("//div//label/span[@class='map-Area-shortName' and text()='" + resort + "']/following-sibling::span[@class='map-Area-shortValue map-Area-shortValue--distance']"));
+        WebElement resortDistanceElem = driver.findElement(By.xpath("//div//label/span[@class='map-Area-shortName' and text()='"
+                + resort + "']/following-sibling::span[@class='map-Area-shortValue map-Area-shortValue--distance']"));
         return resortDistanceElem.getAttribute("innerHTML");
     }
 }
