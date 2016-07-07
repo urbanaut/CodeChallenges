@@ -47,7 +47,7 @@ public class CodeChallenge extends TestBase {
         // Challenge #7: Get all page's text from Crawler
         // Challenge #8: Find all page's broken images
         text = Boolean.parseBoolean(CrawlerOptions.selectCrawlerOption(option).get(0));
-        images = Boolean.parseBoolean(CrawlerOptions.selectCrawlerOption(option).get(2));
+        images = Boolean.parseBoolean(CrawlerOptions.selectCrawlerOption(option).get(1));
         CrawlSite.startCrawl(text, images);
 
     }
