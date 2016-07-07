@@ -44,8 +44,12 @@ public class CodeChallenge extends TestBase {
         SearchResultsPage.readAndPostResults();
 
         // Challenge #6: Crawl every page on the site
+            // Use CrawlerOption NONE
         // Challenge #7: Get all page's text from Crawler
+            // Use CrawlerOption TEXT
         // Challenge #8: Find all page's broken images
+            // Use CrawlerOption IMAGES
+
         text = Boolean.parseBoolean(CrawlerOptions.selectCrawlerOption(option).get(0));
         images = Boolean.parseBoolean(CrawlerOptions.selectCrawlerOption(option).get(1));
         CrawlSite.startCrawl(text, images);
