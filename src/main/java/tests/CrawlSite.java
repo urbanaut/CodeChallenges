@@ -19,17 +19,25 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class CrawlSite extends TestBase {
 
-    private static boolean showInBrowser = false;
+    private static boolean showInBrowser;
     private static boolean getPageText;
     private static boolean checkImages;
-    private static String startingUrl = LandingPage.pageUrl;
-    private static String dateTime = getDateTime();
-    private static String validUrls = "validUrls_" + dateTime + ".txt";
-    private static String extractedText = "dictionary_" + dateTime + ".txt";
+    private static String startingUrl;
+    private static String validUrls;
+    private static String extractedText;
 
-    private static HashSet<String> crawledList = new HashSet<String>();
-    private static Queue<String> toCrawlList = new LinkedBlockingQueue<>(1024);
+    private static HashSet<String> crawledList;
+    private static HashSet<String> imageList;
+    private static Queue<String> toCrawlList;
 
+    CrawlSite() {
+        showInBrowser = false;
+        startingUrl = LandingPage.pageUrl;
+        validUrls = "validUrls_" + getDateTime() + ".txt";
+        extractedText = "dictionary_" + getDateTime() + ".txt";
+        crawledList = new HashSet<>();
+        toCrawlList = new LinkedBlockingQueue<>(1024);
+    }
 
     @Test
     public static void startCrawl(boolean extractText, boolean checkBrokenImgs) {

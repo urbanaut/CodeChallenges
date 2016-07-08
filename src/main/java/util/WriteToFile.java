@@ -11,9 +11,8 @@ public class WriteToFile extends TestBase {
 
     public static void writeOutput(String fileName, String output) throws Exception {
         File outputFile = new File(fileName);
-        if (!outputFile.exists()) {
+        if (!outputFile.exists())
             outputFile.createNewFile();
-        }
         FileWriter fileWriter = new FileWriter(outputFile.getName(),true);
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
         bufferedWriter.write(output);

@@ -27,5 +27,6 @@ public class CodeTester {
         }
         System.out.println("Queue size after: " + toCrawlList.size());
     }
+
 }
 

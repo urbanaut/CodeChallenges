@@ -6,7 +6,6 @@ import org.openqa.selenium.WebElement;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -15,18 +14,18 @@ import java.util.List;
 public class FindBrokenImages extends TestBase {
 
     private static int responseCode;
-    private static String dateTime = getDateTime();
-    private static String brokenImgFile = "brokenImages_" + dateTime + ".txt";
+    private static String brokenImgFile;
 
-    private static HashSet<String> brokenImgList = new HashSet<String>();
-    private static List<WebElement> imageList;
+    FindBrokenImages() {
+        brokenImgFile = "brokenImages_" + getDateTime() + ".txt";
+    }
 
     public static void checkImageLinks(String url) throws Exception {
         try {
             String imgUrl;
             Jsoup.connect(url).userAgent("Chrome").get();
 
-            imageList = driver.findElements(By.tagName("img"));
+            List<WebElement> imageList = driver.findElements(By.tagName("img"));
             for (WebElement image : imageList) {
                  imgUrl = image.getAttribute("src").trim();
                 if (!imgUrl.equals("")) {
@@ -34,8 +33,7 @@ public class FindBrokenImages extends TestBase {
                     if (responseCode != 200) {
                         System.out.println("\nResponse Code: " + responseCode);
                         System.out.println("Broken image found at URL: " + imgUrl);
-                        brokenImgList.add(imgUrl);
-                        WriteToFile.writeOutput(brokenImgFile,imgUrl);
+                        WriteToFile.writeOutput(brokenImgFile, imgUrl);
                     }
                 }
             }
