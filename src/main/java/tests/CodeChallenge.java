@@ -1,10 +1,7 @@
 package tests;
 
 import org.testng.annotations.Test;
-import pages.AllServicesPage;
-import pages.ExploreUtahPage;
 import pages.LandingPage;
-import pages.SearchResultsPage;
 import util.CrawlerOptions;
 import util.TestBase;
 
@@ -13,46 +10,35 @@ import util.TestBase;
  */
 public class CodeChallenge extends TestBase {
 
-    private static CrawlerOptions option;
-    private static LandingPage.Tabs tab;
-    private static String subMenuItem;
-    private static String resortName;
-    private static String searchWhat;
-    private static String searchByResort;
-    private static String searchSubCategory;
-
-    CodeChallenge() {
-        option = CrawlerOptions.NONE;
-        tab = LandingPage.Tabs.DEALS;
-        subMenuItem = "Beginner";
-        resortName = "Park City";
-        searchWhat = "Ski School";
-        searchByResort = "Brighton";
-        searchSubCategory = "Family and Kids";
-    }
+    private static CrawlerOptions option = CrawlerOptions.NONE;
+    private static LandingPage.Tabs tab = LandingPage.Tabs.DEALS;
+    private static String subMenuItem = "Beginner";
+    private static String resortName = "Park City";
+    private static String searchWhat = "Ski School";
+    private static String searchByResort = "Brighton";
+    private static String searchSubCategory = "Family and Kids";
+    private static boolean text, images;
 
     @Test
     public static void runAutomation() throws InterruptedException {
-        boolean text, images;
-
         // Navigate to page
         LandingPage.navigateToPage();
 
         // Challenge #1: Get page title and verify
         LandingPage.getPageTitle();
-
-        // Challenge #2: Select navigation tab
-        LandingPage.openTabbedSection(tab);
-
-        // Challenge #3: Navigate through sub-pages and menus
-        LandingPage.selectSubMenuItem(tab,subMenuItem);
-
-        // Challenge #4: Return resort travel times from airport
-        ExploreUtahPage.compareResortAirportTimes(resortName);
-
-        // Challenge #5: Pass in search parameters
-        AllServicesPage.searchForService(searchWhat,searchByResort,searchSubCategory);
-        SearchResultsPage.readAndPostResults();
+//
+//        // Challenge #2: Select navigation tab
+//        LandingPage.openTabbedSection(tab);
+//
+//        // Challenge #3: Navigate through sub-pages and menus
+//        LandingPage.selectSubMenuItem(tab,subMenuItem);
+//
+//        // Challenge #4: Return resort travel times from airport
+//        ExploreUtahPage.compareResortAirportTimes(resortName);
+//
+//        // Challenge #5: Pass in search parameters
+//        AllServicesPage.searchForService(searchWhat,searchByResort,searchSubCategory);
+//        SearchResultsPage.readAndPostResults();
 
         // Challenge #6: Crawl every page on the site
             // Use CrawlerOption NONE

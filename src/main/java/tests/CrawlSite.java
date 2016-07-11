@@ -19,25 +19,17 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class CrawlSite extends TestBase {
 
-    private static boolean showInBrowser;
+    private static boolean showInBrowser = false;
     private static boolean getPageText;
     private static boolean checkImages;
-    private static String startingUrl;
-    private static String validUrls;
-    private static String extractedText;
+    private static String startingUrl = LandingPage.pageUrl;
+    private static String dateTime = getDateTime();
+    private static String validUrls = "validUrls_" + dateTime + ".txt";
+    private static String extractedText = "dictionary_" + dateTime + ".txt";
 
-    private static HashSet<String> crawledList;
-    private static HashSet<String> imageList;
-    private static Queue<String> toCrawlList;
+    private static HashSet<String> crawledList = new HashSet<String>();
+    private static Queue<String> toCrawlList = new LinkedBlockingQueue<>(1024);
 
-    CrawlSite() {
-        showInBrowser = false;
-        startingUrl = LandingPage.pageUrl;
-        validUrls = "validUrls_" + getDateTime() + ".txt";
-        extractedText = "dictionary_" + getDateTime() + ".txt";
-        crawledList = new HashSet<>();
-        toCrawlList = new LinkedBlockingQueue<>(1024);
-    }
 
     @Test
     public static void startCrawl(boolean extractText, boolean checkBrokenImgs) {
@@ -76,13 +68,11 @@ public class CrawlSite extends TestBase {
             }
 
             if (getPageText) {
-                System.out.println("Extracting page text.");
                 String pageText = doc.body().text();
                 WriteToFile.writeOutput(extractedText, "\n" + pageText + "\n");
             }
 
             if (checkImages) {
-                System.out.print("Checking for broken images...");
                 FindBrokenImages.checkImageLinks(url);
             }
 
@@ -115,7 +105,7 @@ public class CrawlSite extends TestBase {
         }
     }
 
-
+    
     @Override
     protected void finalize() throws Throwable {
         try {

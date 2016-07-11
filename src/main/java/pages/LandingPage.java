@@ -89,7 +89,7 @@ public class LandingPage extends TestBase {
                 activeTab.click();
             WebElement assertionTextElem = driver.findElement(By.xpath("//title[contains(text(),'" + tabValidationText + "')]"));
             if (assertionTextElem.isEnabled())
-                System.out.println("Page validation text '" + tabValidationText + "' found.");
+                System.out.println("New tab validation text '" + tabValidationText + "' found.");
             Assert.assertTrue(assertionTextElem.isEnabled(), "Assertion Failed: Tab title text not found.");
         } catch (Exception e) {
             System.out.println("Error: Failed to open specified tab.");

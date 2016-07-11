@@ -8,7 +8,6 @@ public class CodeTester {
 
     private static Stack<Integer> toCrawlList = new Stack<Integer>();
 
-
     @Test
     public static void queueTest() {
         System.out.println("Initial Queue size: " + toCrawlList.size());
